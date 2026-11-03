@@ -1,0 +1,61 @@
+
+  GET|HEAD  / ............................................................................... home › routes/web.php:25
+  GET|HEAD  api/carte/data ......................................................... carte.data › CarteController@data
+  POST      api/ivr/choisir ...................................................... ivr.choisir › IvrController@choisir
+  POST      api/ivr/enregistrer .......................................... ivr.enregistrer › IvrController@enregistrer
+  POST      api/ivr/menu ............................................................... ivr.menu › IvrController@menu
+  POST      api/sms/recevoir ................................................... sms.recevoir › SmsController@recevoir
+  GET|HEAD  besoins ........................................................... besoins.index › BesoinController@index
+  POST      besoins ........................................................... besoins.store › BesoinController@store
+  GET|HEAD  besoins-actifs ................................................ besoins.publics › BesoinController@publics
+  GET|HEAD  besoins/create .................................................. besoins.create › BesoinController@create
+  GET|HEAD  besoins/{besoin} .................................................... besoins.show › BesoinController@show
+  GET|HEAD  carte ...................................................................... carte › CarteController@index
+  GET|HEAD  cooperative ..................................... cooperative.index › CooperativeVirtuelleController@index
+  GET|HEAD  cooperative/mes-participations ........ cooperative.mes › CooperativeVirtuelleController@mesParticipations
+  GET|HEAD  cooperative/{besoin}/rejoindre ........................... cooperative.rejoindre.form › routes/web.php:150
+  POST      cooperative/{besoin}/rejoindre .......... cooperative.rejoindre › CooperativeVirtuelleController@rejoindre
+  GET|HEAD  dashboard .................................................................. dashboard › routes/web.php:65
+  GET|HEAD  disponibilites ...................................... disponibilites.index › DisponibiliteController@index
+  POST      disponibilites ...................................... disponibilites.store › DisponibiliteController@store
+  GET|HEAD  disponibilites/creer .............................. disponibilites.create › DisponibiliteController@create
+  DELETE    disponibilites/{disponibilite} .................. disponibilites.destroy › DisponibiliteController@destroy
+  GET|HEAD  fiabilite/producteur/{producteur} .................. fiabilite.producteur › FiabiliteController@producteur
+  GET|HEAD  fiabilite/unite/{unite} ...................................... fiabilite.unite › FiabiliteController@unite
+  GET|HEAD  institution ...................................... institution.dashboard › InstitutionController@dashboard
+  GET|HEAD  institution/export ..................................... institution.export › InstitutionController@export
+  GET|HEAD  ivr .................................................................... ivr.simuler › IvrController@index
+  GET|HEAD  livewire-61148e69/css/{component}.css vendor/livewire/livewire/src/Features/SupportCssModules/SupportCssM…
+  GET|HEAD  livewire-61148e69/css/{component}.global.css vendor/livewire/livewire/src/Features/SupportCssModules/Supp…
+  GET|HEAD  livewire-61148e69/js/{component}.js vendor/livewire/livewire/src/Features/SupportJsModules/SupportJsModul…
+  GET|HEAD  livewire-61148e69/livewire.csp.min.js.map ................... Livewire\Mechanisms › FrontendAssets@cspMaps
+  GET|HEAD  livewire-61148e69/livewire.js ................ Livewire\Mechanisms › FrontendAssets@returnJavaScriptAsFile
+  GET|HEAD  livewire-61148e69/livewire.min.js.map .......................... Livewire\Mechanisms › FrontendAssets@maps
+  GET|HEAD  livewire-61148e69/preview-file/{filename} livewire.preview-file › Livewire\Features › FilePreviewControll…
+  POST      livewire-61148e69/update ..... default-livewire.update › Livewire\Mechanisms › HandleRequests@handleUpdate
+  POST      livewire-61148e69/upload-file ..... livewire.upload-file › Livewire\Features › FileUploadController@handle
+  GET|HEAD  login ................................................. login › Auth\AuthenticatedSessionController@create
+  POST      login .......................................................... Auth\AuthenticatedSessionController@store
+  POST      logout .............................................. logout › Auth\AuthenticatedSessionController@destroy
+  GET|HEAD  ma-fiabilite ............................................. fiabilite.moi › FiabiliteController@maFiabilite
+  GET|HEAD  notations ..................................................... notations.index › NotationController@index
+  POST      notations/{disponibilite}/paiement ................. notations.paiement › NotationController@noterPaiement
+  POST      notations/{disponibilite}/qualite .................... notations.qualite › NotationController@noterQualite
+  GET|HEAD  notifications ................................................... notifications.index › routes/web.php:113
+  POST      notifications/{id}/marquer-lu ...................................... notifications.lu › routes/web.php:118
+  GET|HEAD  profile ............................................................ profile.edit › ProfileController@edit
+  PATCH     profile ........................................................ profile.update › ProfileController@update
+  DELETE    profile ...................................................... profile.destroy › ProfileController@destroy
+  GET|HEAD  receptions .................................................. receptions.index › ReceptionController@index
+  POST      receptions/{disponibilite} .................................. receptions.store › ReceptionController@store
+  GET|HEAD  receptions/{disponibilite}/confirmer ...................... receptions.create › ReceptionController@create
+  GET|HEAD  register ................................... register › Auth\RegisteredUserController@showRegistrationForm
+  POST      register .......................................................... Auth\RegisteredUserController@register
+  GET|HEAD  sms/journal .......................................................... sms.journal › SmsController@journal
+  GET|HEAD  sms/simuler .......................................................... sms.simuler › SmsController@simuler
+  GET|HEAD  storage/{path} storage.local › vendor/laravel/framework/src/Illuminate/Filesystem/FilesystemServiceProvid…
+  PUT       storage/{path} storage.local.upload › vendor/laravel/framework/src/Illuminate/Filesystem/FilesystemServic…
+  GET|HEAD  up ........... vendor/laravel/framework/src/Illuminate/Foundation/Configuration/ApplicationBuilder.php:219
+
+                                                                                                   Showing [57] routes
+
