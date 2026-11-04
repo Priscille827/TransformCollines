@@ -37,7 +37,6 @@
                 </div>
 
                 <div class="flex flex-col items-end gap-2">
-                    {{-- Statut commande --}}
                     @php
                         $badge = match($commande->statut) {
                             'en_attente'         => ['bg-amber-100 text-amber-800', 'À traiter'],
@@ -56,7 +55,6 @@
                         {{ $badge[1] }}
                     </span>
 
-                    {{-- Badge paiement --}}
                     @php
                         $badgePaiement = match($commande->statut_paiement) {
                             'paye'       => ['bg-green-100 text-green-800 border-green-300', 'check-circle-2', 'Payé'],
@@ -87,42 +85,6 @@
             </div>
         </div>
 
-        {{-- ═══ BANDEAU PAIEMENT ═══ --}}
-        <div class="mb-6">
-            @if($commande->statut_paiement === 'paye')
-                <div class="bg-gradient-to-br from-green-50 to-lime-50 border-2 border-green-300 rounded-2xl p-5 flex items-start gap-4">
-                    <div class="w-12 h-12 rounded-2xl bg-green-600 text-white flex items-center justify-center flex-shrink-0 shadow-md">
-                        <x-icon name="check-circle-2" size="6" />
-                    </div>
-                    <div class="flex-1">
-                        <p class="font-black text-green-900 text-lg">Paiement reçu</p>
-                        <p class="text-sm text-green-800 mt-1">
-                            Le client a payé <strong>{{ number_format($commande->montant_total, 0, ',', ' ') }} FCFA</strong>
-                            le {{ $commande->paye_le?->format('d/m/Y à H:i') ?? '—' }}.
-                        </p>
-                        @if($commande->transaction_id)
-                            <p class="text-xs text-green-600 mt-2 font-mono">
-                                Transaction : {{ $commande->transaction_id }}
-                            </p>
-                        @endif
-                    </div>
-                </div>
-            @elseif($commande->statut_paiement === 'en_attente' && in_array($commande->statut, ['acceptee', 'en_preparation']))
-                <div class="bg-amber-50 border-2 border-amber-300 rounded-2xl p-5 flex items-start gap-4">
-                    <div class="w-12 h-12 rounded-2xl bg-amber-500 text-white flex items-center justify-center flex-shrink-0 shadow-md">
-                        <x-icon name="clock" size="6" />
-                    </div>
-                    <div class="flex-1">
-                        <p class="font-black text-amber-900 text-lg">En attente du paiement</p>
-                        <p class="text-sm text-amber-800 mt-1">
-                            Le client n'a pas encore payé <strong>{{ number_format($commande->montant_total, 0, ',', ' ') }} FCFA</strong>.
-                            Vous ne pourrez pas préparer la commande tant que le paiement n'est pas reçu.
-                        </p>
-                    </div>
-                </div>
-            @endif
-        </div>
-
         {{-- ═══ LIGNES ═══ --}}
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-6">
             <div class="px-6 py-4 border-b border-gray-100">
@@ -147,10 +109,50 @@
             </div>
         </div>
 
-        {{-- ═══ ACTIONS — UN SEUL BLOC À LA FOIS ═══ --}}
+        {{-- ═══ ACTIONS ═══ --}}
 
-        @if($commande->statut === 'acceptee' && $commande->statut_paiement === 'en_attente')
-            {{-- En attente de paiement --}}
+        {{-- 🔴 AJOUT ICI : Accepter ou refuser une nouvelle commande --}}
+        @if($commande->statut === 'en_attente')
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+                <h2 class="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                    <x-icon name="bell" size="5" class="text-amber-600" />
+                    Nouvelle commande à traiter
+                </h2>
+                <p class="text-sm text-gray-500 mb-4">
+                    Acceptez la commande pour permettre au client de procéder au paiement.
+                </p>
+                
+                <div class="flex gap-3">
+                    {{-- Bouton ACCEPTER --}}
+                    <form method="POST" action="{{ route('commandes.recues.accepter', $commande) }}" class="flex-1">
+                        @csrf
+                        <button type="submit"
+                                class="w-full bg-green-700 hover:bg-green-800 text-white font-bold py-3 rounded-xl shadow-md transition flex items-center justify-center gap-2">
+                            <x-icon name="check" size="5" />
+                            Accepter la commande
+                        </button>
+                    </form>
+
+                    {{-- Bouton REFUSER --}}
+                    <div class="flex-1" x-data="{ openRefus: false }">
+                        <button @click="openRefus = !openRefus" type="button" class="w-full bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 font-bold py-3 rounded-xl transition flex items-center justify-center gap-2">
+                            <x-icon name="x" size="5" />
+                            Refuser
+                        </button>
+                        
+                        <div x-show="openRefus" x-cloak class="mt-3 p-4 bg-red-50 rounded-xl border border-red-200">
+                            <form method="POST" action="{{ route('commandes.recues.refuser', $commande) }}">
+                                @csrf
+                                <label class="block text-sm font-bold text-red-900 mb-2">Motif du refus (ex: stock épuisé)</label>
+                                <textarea name="motif_annulation" rows="2" required class="w-full rounded-lg border-red-200 focus:border-red-500 focus:ring-red-500 mb-2 text-sm bg-white"></textarea>
+                                <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 rounded-lg text-sm">Confirmer le refus</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        @elseif($commande->statut === 'acceptee' && $commande->statut_paiement === 'en_attente')
             <div class="bg-amber-50 border-2 border-amber-300 rounded-xl p-5">
                 <div class="flex items-start gap-4">
                     <div class="w-12 h-12 rounded-2xl bg-amber-500 text-white flex items-center justify-center flex-shrink-0 shadow-md">
@@ -166,7 +168,6 @@
             </div>
 
         @elseif($commande->statut === 'acceptee' && $commande->statut_paiement === 'paye')
-            {{-- Passer en préparation --}}
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
                 <h2 class="font-semibold text-gray-900 mb-3 flex items-center gap-2">
                     <x-icon name="play-circle" size="5" class="text-green-700" />
@@ -187,7 +188,6 @@
             </div>
 
         @elseif($commande->statut === 'en_preparation' && $commande->statut_paiement === 'paye')
-            {{-- Choisir expédition ou retrait --}}
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
                 <h2 class="font-semibold text-gray-900 mb-3 flex items-center gap-2">
                     <x-icon name="package" size="5" class="text-blue-700" />
@@ -219,7 +219,6 @@
             </div>
 
         @elseif($commande->statut === 'expediee' && $commande->statut_paiement === 'paye')
-            {{-- Marquer livrée --}}
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
                 <h2 class="font-semibold text-gray-900 mb-3 flex items-center gap-2">
                     <x-icon name="truck" size="5" class="text-purple-700" />
@@ -237,7 +236,6 @@
             </div>
 
         @elseif($commande->statut === 'disponible_retrait' && $commande->statut_paiement === 'paye')
-            {{-- Marquer livrée (retrait) --}}
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
                 <h2 class="font-semibold text-gray-900 mb-3 flex items-center gap-2">
                     <x-icon name="store" size="5" class="text-cyan-700" />
@@ -255,7 +253,6 @@
             </div>
 
         @elseif($commande->statut === 'livree' && $commande->statut_paiement === 'paye' && !$commande->confirme_vendeur)
-            {{-- Confirmer la livraison --}}
             <div class="bg-gradient-to-br from-green-50 to-lime-50 border-2 border-green-300 rounded-xl p-5">
                 <h2 class="font-semibold text-green-900 mb-3 flex items-center gap-2">
                     <x-icon name="truck" size="5" />
@@ -276,7 +273,6 @@
             </div>
 
         @elseif($commande->statut === 'livree' && $commande->statut_paiement === 'paye' && $commande->confirme_vendeur)
-            {{-- Attente confirmation client --}}
             <div class="bg-blue-50 border-2 border-blue-200 rounded-xl p-5">
                 <div class="flex items-start gap-4">
                     <div class="w-12 h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center flex-shrink-0 shadow-md">
@@ -300,7 +296,6 @@
             </div>
 
         @elseif($commande->statut === 'terminee')
-            {{-- Transaction terminée --}}
             <div class="bg-gradient-to-br from-green-100 to-lime-100 border-2 border-green-400 rounded-xl p-5">
                 <div class="flex items-start gap-4">
                     <div class="w-12 h-12 rounded-2xl bg-green-600 text-white flex items-center justify-center flex-shrink-0 shadow-md">
