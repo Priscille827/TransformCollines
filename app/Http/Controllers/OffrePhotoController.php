@@ -27,7 +27,7 @@ class OffrePhotoController extends Controller
             'photo.max'      => 'L\'image ne doit pas dépasser 3 Mo.',
         ]);
 
-        $chemin = $request->file('photo')->store("offres/{$offre->id}", 'public');
+        $chemin = $request->file('photo')->store("offres/{$offre->id}");
 
         $estPremiere = $offre->photos()->count() === 0;
 
@@ -52,8 +52,8 @@ class OffrePhotoController extends Controller
             abort(403);
         }
 
-        if (Storage::disk('public')->exists($photo->chemin)) {
-            Storage::disk('public')->delete($photo->chemin);
+        if (Storage::exists($photo->chemin)) {
+        Storage::delete($photo->chemin);
         }
 
         $etaitPrincipale = $photo->offre->photo_principale === $photo->chemin;

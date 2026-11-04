@@ -65,12 +65,12 @@ class DocumentController extends Controller
         }
 
         // Supprimer l'ancien document si existe
-        if ($user->document_chemin && Storage::disk('public')->exists($user->document_chemin)) {
-            Storage::disk('public')->delete($user->document_chemin);
+        if ($user->document_chemin && Storage::exists($user->document_chemin)) {
+    Storage::delete($user->document_chemin);
         }
 
         // Stocker le nouveau
-        $chemin = $request->file('document')->store("documents/{$user->id}", 'public');
+       $chemin = $request->file('document')->store("documents/{$user->id}");
 
         $user->update([
             'document_type'    => $data['document_type'],

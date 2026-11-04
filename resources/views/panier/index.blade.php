@@ -24,7 +24,7 @@
                         <div class="p-4 flex items-center gap-4">
                             <div class="w-16 h-16 rounded-lg bg-gradient-to-br from-green-50 to-amber-50 flex items-center justify-center flex-shrink-0">
                                 @if($item->offre->photo_principale)
-                                    <img src="{{ asset('storage/' . $item->offre->photo_principale) }}" class="w-full h-full object-cover rounded-lg">
+                                    <img src="{{ Storage::url($item->offre->photo_principale) }}" class="w-full h-full object-cover rounded-lg">
                                 @else
                                     <x-icon name="package" size="6" class="text-green-300" />
                                 @endif
