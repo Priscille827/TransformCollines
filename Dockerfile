@@ -1,6 +1,6 @@
 FROM php:8.2-apache
 
-# Installer les extensions PHP nécessaires pour Laravel et MySQL
+# Installer les dépendances système, Node.js et Composer
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -11,7 +11,8 @@ RUN apt-get update && apt-get install -y \
     unzip \
     nodejs \
     npm \
-    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd \
+    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Activer le module de réécriture d'URL d'Apache
 RUN a2enmod rewrite
