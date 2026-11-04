@@ -62,7 +62,7 @@
                         {{-- Image --}}
                         <div class="aspect-video bg-gradient-to-br from-green-50 to-lime-50 flex items-center justify-center relative">
                             @if($offre->photo_principale)
-                                <img src="{{ asset('storage/' . $offre->photo_principale) }}" alt="{{ $offre->titre }}" class="w-full h-full object-cover">
+                                <img src="{{ Storage::url($offre->photo_principale) }}" alt="{{ $offre->titre }}" class="w-full h-full object-cover">
                             @else
                                 <x-icon name="package" size="12" class="text-green-300" />
                             @endif
