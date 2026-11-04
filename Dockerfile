@@ -34,8 +34,14 @@ ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
-# Donner les permissions au dossier storage
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+# --- CORRECTIONS POUR LE FRONT ET LES PERMISSIONS ---
+# 1. Créer les dossiers de cache et logs de Laravel
+RUN mkdir -p storage/framework/{sessions,views,cache} bootstrap/cache
+# 2. Donner tous les droits à www-data (le serveur Apache) sur tout le projet
+RUN chown -R www-data:www-data /var/www/html
+RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+# 3. Activer les liens symboliques pour le stockage (si tu as des images)
+RUN php artisan storage:link
 
 # Exposer le port 80 (Apache)
 EXPOSE 80
