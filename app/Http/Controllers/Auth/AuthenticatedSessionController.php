@@ -23,6 +23,11 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(Request $request)
     {
+        // Formater le numéro AVANT validation
+        if ($request->filled('telephone')) {
+            $request->merge(['telephone' => $this->formaterTelephone($request->telephone)]);
+        }
+
         $request->validate([
             'telephone'    => 'required|string',
             'mot_de_passe' => 'required|string',
@@ -60,5 +65,17 @@ class AuthenticatedSessionController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect('/');
+    }
+
+    /**
+     * Nettoie et formate le numéro de téléphone au format béninois (+229...)
+     */
+    private function formaterTelephone(string $telephone): string
+    {
+        $chiffres = preg_replace('/[^0-9]/', '', $telephone);
+        if (str_starts_with($chiffres, '229')) {
+            $chiffres = substr($chiffres, 3);
+        }
+        return '+229' . $chiffres;
     }
 }

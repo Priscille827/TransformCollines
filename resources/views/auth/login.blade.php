@@ -12,7 +12,6 @@
 
     <div class="min-h-screen grid grid-cols-1 lg:grid-cols-2">
 
-        {{-- Colonne gauche --}}
         <div class="hidden lg:flex relative bg-gradient-to-br from-green-900 via-green-800 to-green-700 text-white p-12 flex-col justify-between overflow-hidden">
 
             <div class="absolute -top-32 -right-32 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
@@ -55,7 +54,6 @@
             </div>
         </div>
 
-        {{-- Colonne droite --}}
         <div class="flex flex-col justify-center p-6 sm:p-10 lg:p-12 bg-[#fef9f3]">
 
             <div class="lg:hidden mb-8 flex items-center gap-3">
@@ -89,8 +87,10 @@
                             <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                                 <x-icon name="phone" size="5" class="text-stone-400" />
                             </div>
-                            <input type="text" name="telephone" value="{{ old('telephone') }}"
-                                   placeholder="+22997000001"
+                            <input type="tel" name="telephone" value="{{ old('telephone') }}"
+                                   placeholder="01 97 00 00 01"
+                                   pattern="^(\+229|229)?0?[0-9]{2}\s?[0-9]{2}\s?[0-9]{2}\s?[0-9]{2}\s?[0-9]{2}$"
+                                   title="Veuillez entrer un numéro béninois valide"
                                    class="w-full pl-11 pr-4 py-3.5 rounded-2xl border-2 border-stone-200 bg-white/70 focus:ring-4 focus:ring-green-500/20 focus:border-green-600 outline-none transition font-mono" required autofocus>
                         </div>
                     </div>
@@ -124,17 +124,6 @@
                         S'inscrire
                     </a>
                 </p>
-
-                <div class="mt-8 pt-6 border-t border-stone-200">
-                    <p class="text-xs font-bold text-stone-500 uppercase tracking-wider mb-3">🔑 Comptes de test</p>
-                    <div class="space-y-1.5 text-xs font-mono text-stone-500 bg-white/60 rounded-xl p-3 border border-stone-200">
-                        <p><span class="text-stone-400">Admin :</span> +22990000000</p>
-                        <p><span class="text-stone-400">Producteur :</span> +22997000001</p>
-                        <p><span class="text-stone-400">Unité :</span> +22996000001</p>
-                        <p><span class="text-stone-400">Population :</span> +22995000001</p>
-                        <p class="text-green-700 font-bold">Mot de passe : password</p>
-                    </div>
-                </div>
             </div>
         </div>
     </div>

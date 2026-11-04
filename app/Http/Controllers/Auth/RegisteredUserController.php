@@ -22,7 +22,6 @@ class RegisteredUserController extends Controller
     {
         $role = $request->input('role');
 
-        // Si aucun rôle → écran de choix
         if (!in_array($role, ['population', 'producteur', 'unite_transformation'])) {
             return view('auth.choose-role');
         }
@@ -38,18 +37,22 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request)
     {
-        $role = $request->input('type_compte');
+        // Formater les numéros AVANT validation
+        if ($request->filled('telephone')) {
+            $request->merge(['telephone' => $this->formaterTelephone($request->telephone)]);
+        }
+        if ($request->filled('whatsapp')) {
+            $request->merge(['whatsapp' => $this->formaterTelephone($request->whatsapp)]);
+        }
 
-        // Règles de validation selon le rôle
+        $role = $request->input('type_compte');
         $rules = $this->rulesPour($role);
         $data  = $request->validate($rules, $this->messages());
 
-        // Statut de validation
         $statutValidation = $role === 'population' ? 'valide' : 'en_attente';
 
         DB::beginTransaction();
         try {
-            // Créer l'utilisateur
             $utilisateur = Utilisateur::create([
                 'nom'               => $data['nom'],
                 'email'             => $data['email'] ?? null,
@@ -68,14 +71,12 @@ class RegisteredUserController extends Controller
                 'mot_de_passe'      => Hash::make($data['mot_de_passe']),
             ]);
 
-            // Créer le profil étendu
             if ($role === 'producteur') {
                 Producteur::create(['utilisateur_id' => $utilisateur->id]);
             } elseif ($role === 'unite_transformation') {
                 UniteTransformation::create(['utilisateur_id' => $utilisateur->id]);
             }
 
-            // Notifier les admins (sauf pour Population)
             if ($role !== 'population') {
                 $admins = Utilisateur::where('type_compte', 'admin')->get();
                 foreach ($admins as $admin) {
@@ -95,15 +96,13 @@ class RegisteredUserController extends Controller
             DB::commit();
             Auth::login($utilisateur);
 
-            // Redirection selon le rôle
             if ($role === 'population') {
                 return redirect()->route('marketplace.index')
                     ->with('success', 'Bienvenue sur Transform\'Collines ! Votre compte est activé.');
             }
 
-            // Producteur et Unité → choisir leurs produits
-           return redirect()->route('produits.choisir')
-    ->with('success', 'Compte créé. Sélectionnez vos produits puis fournissez votre document d\'identification.');
+            return redirect()->route('produits.choisir')
+                ->with('success', 'Compte créé. Sélectionnez vos produits puis fournissez votre document d\'identification.');
     
         } catch (\Throwable $e) {
             DB::rollBack();
@@ -111,9 +110,6 @@ class RegisteredUserController extends Controller
         }
     }
 
-    /**
-     * Règles de validation selon le rôle.
-     */
     private function rulesPour(?string $role): array
     {
         $base = [
@@ -147,9 +143,6 @@ class RegisteredUserController extends Controller
         };
     }
 
-    /**
-     * Messages d'erreur personnalisés.
-     */
     private function messages(): array
     {
         return [
@@ -168,9 +161,6 @@ class RegisteredUserController extends Controller
         ];
     }
 
-    /**
-     * Libellé lisible d'un rôle.
-     */
     private function libelleRole(string $role): string
     {
         return match ($role) {
@@ -179,5 +169,17 @@ class RegisteredUserController extends Controller
             'population'           => 'Population',
             default                => $role,
         };
+    }
+
+    /**
+     * Nettoie et formate le numéro de téléphone au format béninois (+229...)
+     */
+    private function formaterTelephone(string $telephone): string
+    {
+        $chiffres = preg_replace('/[^0-9]/', '', $telephone);
+        if (str_starts_with($chiffres, '229')) {
+            $chiffres = substr($chiffres, 3);
+        }
+        return '+229' . $chiffres;
     }
 }

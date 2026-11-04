@@ -68,12 +68,10 @@
         {{-- Colonne gauche : Illustration --}}
         <div class="hidden lg:flex relative bg-gradient-to-br {{ $config['gradient'] }} text-white p-12 flex-col justify-between overflow-hidden">
 
-            {{-- Formes décoratives --}}
             <div class="absolute -top-32 -right-32 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
             <div class="absolute -bottom-40 -left-20 w-[500px] h-[500px] bg-white/5 rounded-full blur-3xl"></div>
             <div class="absolute top-1/2 right-1/4 w-24 h-24 bg-gradient-to-br {{ $config['accent'] }} rounded-full blur-2xl opacity-30"></div>
 
-            {{-- Logo --}}
             <div class="relative flex items-center gap-3">
                 <div class="w-11 h-11 rounded-2xl bg-white/15 backdrop-blur flex items-center justify-center border border-white/20">
                     <x-icon name="sprout" size="6" class="text-white" />
@@ -81,7 +79,6 @@
                 <span class="text-xl font-bold">Transform'Collines</span>
             </div>
 
-            {{-- Contenu central --}}
             <div class="relative">
                 <div class="inline-flex items-center gap-2 px-3 py-1 bg-white/10 backdrop-blur border border-white/20 rounded-full text-xs font-semibold uppercase tracking-wider mb-6">
                     <span class="w-1.5 h-1.5 rounded-full bg-lime-400 animate-pulse"></span>
@@ -108,7 +105,6 @@
                 </ul>
             </div>
 
-            {{-- Footer --}}
             <div class="relative text-xs text-white/50">
                 © 2026 Transform'Collines · Développé par Ulrich KASSIN et Priscille KINDOHO
             </div>
@@ -117,10 +113,8 @@
         {{-- Colonne droite : Formulaire --}}
         <div class="flex flex-col justify-center p-6 sm:p-10 lg:p-12 relative bg-[#fef9f3]">
 
-            {{-- Décor --}}
             <div class="absolute inset-0 grain opacity-40 pointer-events-none"></div>
 
-            {{-- Logo mobile --}}
             <div class="lg:hidden mb-8 flex items-center gap-3">
                 <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-green-800 to-green-600 flex items-center justify-center">
                     <x-icon name="sprout" size="6" class="text-white" />
@@ -194,9 +188,12 @@
                         <label class="block text-sm font-semibold text-stone-800 mb-2">
                             Téléphone <span class="text-red-500">*</span>
                         </label>
-                        <input type="text" name="telephone" value="{{ old('telephone') }}" required
-                               placeholder="+22997000001"
+                        <input type="tel" name="telephone" value="{{ old('telephone') }}" required
+                               pattern="^(\+229|229)?0?[0-9]{2}\s?[0-9]{2}\s?[0-9]{2}\s?[0-9]{2}\s?[0-9]{2}$"
+                               title="Veuillez entrer un numéro béninois valide (ex: 0197000001)"
+                               placeholder="01 97 00 00 01"
                                class="w-full rounded-2xl border-2 border-stone-200 bg-white/70 px-4 py-3.5 focus:ring-4 focus:ring-green-500/20 focus:border-green-600 outline-none transition font-mono">
+                        <p class="text-xs text-stone-500 mt-1">Format béninois (ex: 0197000001 ou +229 01 97 00 00 01)</p>
                     </div>
 
                     @if(in_array($role, ['producteur', 'unite_transformation']))
@@ -205,8 +202,10 @@
                                 Numéro WhatsApp
                                 <span class="text-stone-400 text-xs font-normal">(optionnel)</span>
                             </label>
-                            <input type="text" name="whatsapp" value="{{ old('whatsapp') }}"
-                                   placeholder="+22997000001"
+                            <input type="tel" name="whatsapp" value="{{ old('whatsapp') }}"
+                                   pattern="^(\+229|229)?0?[0-9]{2}\s?[0-9]{2}\s?[0-9]{2}\s?[0-9]{2}\s?[0-9]{2}$"
+                                   title="Veuillez entrer un numéro béninois valide"
+                                   placeholder="01 97 00 00 01"
                                    class="w-full rounded-2xl border-2 border-stone-200 bg-white/70 px-4 py-3.5 focus:ring-4 focus:ring-green-500/20 focus:border-green-600 outline-none transition font-mono">
                         </div>
 
